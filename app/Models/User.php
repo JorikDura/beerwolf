@@ -15,7 +15,7 @@ final class User extends Authenticatable
     use HasFactory;
 
     /**
-     * @var string[]
+     * @var list<string>
      */
     protected $hidden = [
         'password',
