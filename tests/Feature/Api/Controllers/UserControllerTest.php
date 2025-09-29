@@ -16,7 +16,7 @@ describe('user controller tests', function () {
     it('get all users', function () {
         $response = getJson(
             uri: route(
-                name: 'UserIndex',
+                name: 'UserIndexV1',
             ),
         );
 
@@ -56,7 +56,7 @@ describe('user controller tests', function () {
 
         $response = getJson(
             uri: route(
-                name: 'UserShow',
+                name: 'UserShowV1',
                 parameters: ['userId' => $randomUser->id],
             ),
         );
