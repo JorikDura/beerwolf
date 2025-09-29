@@ -12,10 +12,10 @@ final class User extends Authenticatable
 {
     use Notifiable;
     use HasApiTokens;
-    Use HasFactory;
+    use HasFactory;
 
     /**
-     * @var list<string>
+     * @var string[]
      */
     protected $hidden = [
         'password',
