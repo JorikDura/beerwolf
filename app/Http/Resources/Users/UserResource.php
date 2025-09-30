@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\Users;
 
+use App\Http\Resources\Images\ImageResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -23,6 +24,9 @@ final class UserResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'image' => $this->relationLoaded('image')
+                ? ImageResource::make($this->image)
+                : null,
         ];
     }
 }

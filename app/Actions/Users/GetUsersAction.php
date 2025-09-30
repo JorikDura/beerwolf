@@ -15,6 +15,7 @@ final readonly class GetUsersAction
     public function __invoke(): LengthAwarePaginator
     {
         return User::query()
+            ->with(['image'])
             ->select([
                 'id',
                 'name',

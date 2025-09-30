@@ -20,6 +20,7 @@ final readonly class GetUserByIdAction
                 'id',
                 'name',
             ])
+            ->with(['image'])
             ->findOrFail($userId);
     }
 }

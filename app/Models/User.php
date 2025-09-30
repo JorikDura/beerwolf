@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use app\Extensions\Traits\HasImage;
+use app\Extensions\Traits\HasImages;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -15,6 +17,8 @@ final class User extends Authenticatable
     use Notifiable;
     use HasApiTokens;
     use HasFactory;
+    use HasImage;
+    use HasImages;
 
     /**
      * @var list<string>
