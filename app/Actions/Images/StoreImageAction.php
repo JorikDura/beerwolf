@@ -8,16 +8,14 @@ use App\Models\Image;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
+use function App\Extensions\Helpers\generateFilename;
+
 final readonly class StoreImageAction
 {
-    private const int MAX_NAME_LENGTH = 12;
-
     /**
      * @param UploadedFile $file
      * @param User $user
@@ -47,36 +45,24 @@ final readonly class StoreImageAction
 
         $existingImage?->delete();
 
-        $filename ??= $this->generateFilename($file);
+        $filename ??= generateFilename($file);
 
-        return DB::transaction(static function () use ($filename, $model, $file, $user) {
-            $key = (string) $model->getKey();
+        $key = (string) $model->getKey();
 
-            $image = new Image();
-            $image->imageable()->associate($model);
-            $image->user()->associate($user);
-            $image->path = "$key/$filename";
-            $image->extension = $file->extension();
-            $image->save();
+        $image = new Image();
+        $image->imageable()->associate($model);
+        $image->user()->associate($user);
+        $image->path = "$key/$filename";
+        $image->extension = $file->extension();
+        $image->save();
 
-            Storage::disk('images')
-                ->putFileAs(
-                    path: $key,
-                    file: $file,
-                    name: $filename,
-                );
+        Storage::disk('images')
+            ->putFileAs(
+                path: $key,
+                file: $file,
+                name: $filename,
+            );
 
-            return $image;
-        });
-    }
-
-    /**
-     * @param UploadedFile $file
-     *
-     * @return string
-     */
-    private function generateFilename(UploadedFile $file): string
-    {
-        return Str::random(length: self::MAX_NAME_LENGTH) . '.' . $file->extension();
+        return $image;
     }
 }

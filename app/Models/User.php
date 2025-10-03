@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Extensions\Traits\HasComments;
 use app\Extensions\Traits\HasImage;
 use app\Extensions\Traits\HasImages;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,6 +20,7 @@ final class User extends Authenticatable
     use HasFactory;
     use HasImage;
     use HasImages;
+    use HasComments;
 
     /**
      * @var list<string>

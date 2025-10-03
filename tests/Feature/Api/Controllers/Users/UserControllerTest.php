@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 use App\Models\Image;
 use App\Models\User;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 use function Pest\Laravel\getJson;
+use function Tests\Extensions\generateFakeFile;
 
 describe('user controller tests', function (): void {
     beforeEach(function (): void {
@@ -26,7 +26,7 @@ describe('user controller tests', function (): void {
         $response->assertSuccessful();
 
         $response->assertJsonCount(
-            count: 5,
+            count: $this->users->count(),
             key: 'data',
         );
 
@@ -61,12 +61,7 @@ describe('user controller tests', function (): void {
 
         Storage::fake('images');
 
-        $fakeImage = UploadedFile::fake()
-            ->image(
-                name: 'test.jpg',
-                width: 200,
-                height: 200,
-            );
+        $fakeImage = generateFakeFile();
 
         Storage::disk('images')
             ->putFileAs(

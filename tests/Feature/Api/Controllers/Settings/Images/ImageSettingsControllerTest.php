@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 use App\Models\Image;
 use App\Models\User;
-use Illuminate\Http\UploadedFile;
 use Laravel\Sanctum\Sanctum;
 
 use function Pest\Laravel\deleteJson;
 use function Pest\Laravel\postJson;
+use function Tests\Extensions\generateFakeFile;
 
 describe('image settings controller tests', function (): void {
     beforeEach(function (): void {
@@ -21,12 +21,7 @@ describe('image settings controller tests', function (): void {
 
         Storage::fake('images');
 
-        $fakeImage = UploadedFile::fake()
-            ->image(
-                name: 'test.jpg',
-                width: 200,
-                height: 400,
-            );
+        $fakeImage = generateFakeFile();
 
         $response = postJson(
             uri: route(name: 'settings.image.store.v1'),
@@ -62,12 +57,7 @@ describe('image settings controller tests', function (): void {
 
         Storage::fake('images');
 
-        $fakeImage = UploadedFile::fake()
-            ->image(
-                name: 'test.jpg',
-                width: 200,
-                height: 200,
-            );
+        $fakeImage = generateFakeFile();
 
         Storage::disk('images')
             ->putFileAs(
@@ -78,8 +68,7 @@ describe('image settings controller tests', function (): void {
 
         $path = "$key/test.jpg";
 
-        /** @var Image $image */
-        $image = Image::factory()
+        Image::factory()
             ->create([
                 'imageable_id' => $this->user->id,
                 'imageable_type' => User::class,
