@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace app\Extensions\Traits;
+namespace App\Extensions\Traits;
 
 use App\Models\Image;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
