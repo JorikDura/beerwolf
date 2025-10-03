@@ -50,7 +50,7 @@ services:
   pgbouncer:
     image: 'edoburu/pgbouncer:v1.24.1-p1'
     ports:
-      - '${FORWARD_DB_PORT:-5432}:5432'
+      - '5432:5432'
     environment:
       DB_HOST: 'pgsql'
       DB_PORT: '${FORWARD_DB_PORT:-5432}'
