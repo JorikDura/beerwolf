@@ -6,25 +6,30 @@ namespace App\Actions\Comments;
 
 use App\Models\Comment;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Pagination\LengthAwarePaginator;
 
-final readonly class GetCommentsAction
+final readonly class DeleteCommentByIdAction
 {
     /**
+     * @param int|Model $commentId
      * @param int|Model $modelId
      * @param string $modelType
      *
-     * @return LengthAwarePaginator
+     * @return void
      */
     public function __invoke(
+        int|Model $commentId,
         int|Model $modelId,
         string $modelType,
-    ): LengthAwarePaginator {
+    ): void {
+        if ($commentId instanceof Model) {
+            $commentId = $commentId->getKey();
+        }
+
         if ($modelId instanceof Model) {
             $modelId = $modelId->getKey();
         }
 
-        return Comment::query()
+        $comment = Comment::query()
             ->with(['images'])
             ->where(
                 column: 'commentable_id',
@@ -36,6 +41,8 @@ final readonly class GetCommentsAction
                 operator: '=',
                 value: $modelType,
             )
-            ->paginate();
+            ->findOrFail($commentId);
+
+        $comment->delete();
     }
 }

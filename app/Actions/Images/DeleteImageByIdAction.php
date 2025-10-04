@@ -2,40 +2,43 @@
 
 declare(strict_types=1);
 
-namespace App\Actions\Comments;
+namespace App\Actions\Images;
 
-use App\Models\Comment;
+use App\Models\Image;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Pagination\LengthAwarePaginator;
 
-final readonly class GetCommentsAction
+final readonly class DeleteImageByIdAction
 {
     /**
+     * @param int $imageId
      * @param int|Model $modelId
      * @param string $modelType
      *
-     * @return LengthAwarePaginator
+     * @return void
      */
     public function __invoke(
+        int $imageId,
         int|Model $modelId,
         string $modelType,
-    ): LengthAwarePaginator {
+    ): void {
         if ($modelId instanceof Model) {
             $modelId = $modelId->getKey();
         }
 
-        return Comment::query()
-            ->with(['images'])
+        /** @var Image $image */
+        $image = Image::query()
             ->where(
-                column: 'commentable_id',
+                column: 'imageable_id',
                 operator: '=',
                 value: $modelId,
             )
             ->where(
-                column: 'commentable_type',
+                column: 'imageable_type',
                 operator: '=',
                 value: $modelType,
             )
-            ->paginate();
+            ->findOrFail($imageId);
+
+        $image->delete();
     }
 }

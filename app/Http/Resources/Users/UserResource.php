@@ -24,8 +24,8 @@ final class UserResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'image' => $this->relationLoaded('image')
-                ? ImageResource::make($this->image)
+            'image' => $this->relationLoaded('currentImage')
+                ? ImageResource::make($this->currentImage)
                 : null,
         ];
     }

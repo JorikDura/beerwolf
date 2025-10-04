@@ -7,6 +7,7 @@ namespace App\Actions\Comments;
 use App\Actions\Images\StoreImagesAction;
 use App\Models\Comment;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -18,7 +19,7 @@ final readonly class StoreCommentAction
     }
 
     /**
-     * @param int $modelId
+     * @param int|Model $modelId
      * @param string $modelType
      * @param User $author
      * @param array $attributes
@@ -27,11 +28,15 @@ final readonly class StoreCommentAction
      * @throws Throwable
      */
     public function __invoke(
-        int $modelId,
+        int|Model $modelId,
         string $modelType,
         User $author,
         array $attributes,
     ): Comment {
+        if ($modelId instanceof Model) {
+            $modelId = $modelId->getKey();
+        }
+
         return DB::transaction(
             callback: function () use ($modelType, $modelId, $attributes, $author): Comment {
                 $comment = new Comment();

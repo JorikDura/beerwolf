@@ -2,39 +2,36 @@
 
 declare(strict_types=1);
 
-namespace App\Actions\Comments;
+namespace App\Actions\Images;
 
-use App\Models\Comment;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Image;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-final readonly class GetCommentsAction
+final readonly class GetImagesAction
 {
     /**
-     * @param int|Model $modelId
+     * @param int $modelId
      * @param string $modelType
      *
      * @return LengthAwarePaginator
      */
     public function __invoke(
-        int|Model $modelId,
+        int $modelId,
         string $modelType,
     ): LengthAwarePaginator {
-        if ($modelId instanceof Model) {
-            $modelId = $modelId->getKey();
-        }
-
-        return Comment::query()
-            ->with(['images'])
+        return Image::query()
             ->where(
-                column: 'commentable_id',
+                column: 'imageable_id',
                 operator: '=',
                 value: $modelId,
             )
             ->where(
-                column: 'commentable_type',
+                column: 'imageable_type',
                 operator: '=',
                 value: $modelType,
+            )
+            ->orderBy(
+                column: 'created_at',
             )
             ->paginate();
     }

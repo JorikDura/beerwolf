@@ -34,16 +34,9 @@ final readonly class StoreImageAction
         $model ??= $user;
 
         abort_if(
-            boolean: ! method_exists($model, 'image'),
+            boolean: ! method_exists($model, 'images'),
             code: Response::HTTP_METHOD_NOT_ALLOWED,
         );
-
-        /** @var ?Image $existingImage */
-        $existingImage = $model
-            ->image()
-            ->first();
-
-        $existingImage?->delete();
 
         $filename ??= generateFilename($file);
 
